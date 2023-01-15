@@ -10,6 +10,7 @@ import Masala from '../assets/img3.jpg';
 import Mushroom from '../assets/img4.jpg';
 import './Homepage.css';
 import Footer from '../Common/Footer/Footer';
+import ViewFoodItems from '../Customer/ViewFoodItems/ViewFoodItems';
 
 const HomePage = (props) => {
   console.log(props)
@@ -23,7 +24,7 @@ const HomePage = (props) => {
     <Route path={`${url}admin-login`} component={AdminLogin} />
     <Route path={`${url}customer-login`} component={CustomerLogin} />
     <Route path={`${url}signup`} component={CustomerSignUp} />
-    {pathname === '/' && <div style={{ backgroundColor: "#FFFDD0", height: "130vh" }}>
+    {pathname === '/' && <div style={{ backgroundColor: "#FFFDD0", height: "85vh" }}>
       <Row>
         <Col style={{ paddingLeft: "170px", paddingRight: "170px" }}>
           <Carousel style={{height: '100px'}}>
@@ -55,6 +56,9 @@ const HomePage = (props) => {
         </Col>
       </Row>
     </div>}
+    <fragment>
+      < ViewFoodItems/>
+    </fragment>
     <Footer />
   </div>
 }

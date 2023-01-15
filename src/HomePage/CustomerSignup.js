@@ -59,7 +59,7 @@ const {OTP,randomOtp} = state;
     if(OTP===randomOtp){
       console.log("#######", "equal")
     let userExists;
-    await fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/customerData/${customerId}.json`)
+    await fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/customerData/${customerId}.json`)
       .then(res => res.json())
       .then(data => {
         userExists = data === null ? false : true;
@@ -68,7 +68,7 @@ const {OTP,randomOtp} = state;
       :
     setState({ ...state });
     if(!userExists){
-      fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/customerData/${customerId}.json`, {
+      fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/customerData/${customerId}.json`, {
       method: 'PATCH',
       body: JSON.stringify({ ...state })
     }).then(res => Promise.all([res, res.json()]))

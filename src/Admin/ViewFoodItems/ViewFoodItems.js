@@ -1,12 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Card, Button, Row, Col, Spinner } from 'react-bootstrap';
+// import Footer from '../../Common/Footer/Footer';
+import Footer from '../../Common/Footer/Footer';
 
 const ViewFoodItems = (props) => {
   const [data, setData] = useState('');
   const [loading, setLoader] = useState(true);
 
   const fetchItems = () => {
-    fetch('https://my-canteen-management-default-rtdb.firebaseio.com/menuItems.json')
+    fetch('https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/menuItems.json')
       .then(res => res.json())
       .then(data => {
         setData(data);
@@ -23,7 +25,7 @@ const ViewFoodItems = (props) => {
   }
 
   const deleteItem = (id) => {
-    fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/menuItems/${id}.json`, {
+    fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/menuItems/${id}.json`, {
       method: 'DELETE',
     }).then(res => Promise.all([res, res.json()]))
     .then(() => fetchItems());
@@ -62,7 +64,8 @@ const ViewFoodItems = (props) => {
           </Col>
         ))}
       </Row>}
-
+      <Footer></Footer>
     </Fragment>)
+    
 }
 export default ViewFoodItems;

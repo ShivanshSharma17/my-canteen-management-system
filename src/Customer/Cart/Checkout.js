@@ -10,12 +10,14 @@ const Checkout = (props) => {
     cart: cartItems,
     success: ''
   });
+  const [error, setError] = useState({});
 
   const handleCardNumber = (e) => {
     setState({
       ...state,
       cardNumber: e.target.value,
-    })
+    });
+    handleValidation('cardErr');
   }
 
   const handleCVV = (e) => {
@@ -25,14 +27,23 @@ const Checkout = (props) => {
     })
   }
 
+  const handleValidation = (errType) => {
+    let err = false;
+    
+    switch(errType){
+      case 'cardErr': if(state.cardNumber.length<16 || state.cardNumber.length>16) err = true;
+    }
+    setError({...error, [errType]: err})
+  }
+
   const handleMakePayment = async () => {
     const { cart } = state;
     const customerId = sessionStorage.getItem("loggedInCustomer");
-    await fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/orders/${customerId}.json`, {
+    await fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/orders/${customerId}.json`, {
       method: 'PATCH',
       body: JSON.stringify({ ...cart })
     });
-    fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/cartItems/${customerId}.json`, {
+    fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/cartItems/${customerId}.json`, {
       method: 'DELETE',
     }).then(res => Promise.all([res, res.json()]))
     .then(() => console.log("Sucess!!!"));
@@ -47,8 +58,10 @@ const Checkout = (props) => {
   }
 
   const { cardNumber, cvv, total, success } = state;
-  const disableMakePayment = cardNumber === '' || cvv === '';
-
+  const errorExists = Object.values(error).some(err => err===true);
+  const disableMakePayment = cardNumber === '' || cvv === '' || errorExists;
+  const { card = ''} = error;
+  console.log(card)
   return <div className='bg-image'>
      <Container>
       <h2>Payment!!!</h2>
@@ -65,6 +78,8 @@ const Checkout = (props) => {
            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
              <Form.Label>Card No:</Form.Label>
              <Form.Control type="text" value={cardNumber} onChange={handleCardNumber} />
+               {card && <span className='err'>Please enter 16 digit card no.</span>  
+            }
            </Form.Group>
            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
              <Form.Label>CVV:</Form.Label>

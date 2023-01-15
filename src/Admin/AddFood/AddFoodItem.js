@@ -16,7 +16,7 @@ const AddFoodItem = (props) => {
     console.log("effect", itemId)
     if(itemId) {
       console.log("inside effect", itemId)
-      fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/menuItems/${itemId}.json`)
+      fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/menuItems/${itemId}.json`)
       .then(res => res.json())
       .then(data => {
         setState({
@@ -54,7 +54,7 @@ const AddFoodItem = (props) => {
     const { id } = state;
     const itemId = id === '' ? generateUniqId() : id;
     console.log("editttt", state)
-    fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/menuItems/${itemId}.json`, {
+    fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/menuItems/${itemId}.json`, {
       method: 'PATCH',
       body: JSON.stringify({ ...state, id: itemId })
     }).then(res => Promise.all([res, res.json()]))

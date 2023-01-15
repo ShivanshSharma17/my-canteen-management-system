@@ -3,16 +3,16 @@ import { Row, Col, Button, Table, Container } from 'react-bootstrap';
 
 const Cart = (props) => {
   console.log("cart", props)
-  const [cartData, setCartData] =  useState([]);
+  const [cartData, setCartData] =  useState({});
   const [totalAmount, setTotalAmount] =  useState(0);
 
   const fetchCartItems = () => {
     const customerId = sessionStorage.getItem("loggedInCustomer")
-    fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/cartItems/${customerId}.json`)
+    fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/cartItems/${customerId}.json`)
       .then(res => res.json())
       .then(data => {
-        data ? setCartData(data) : setCartData([]);
-        data ? setTotalAmount(data.reduce((acc,d) => acc+(d.quantity * d.price),0)) :  setTotalAmount(0);
+        data ? setCartData(data) : setCartData({});
+        data ? setTotalAmount(Object.values(data).reduce((acc,d) => acc+(d.quantity * d.price),0)) :  setTotalAmount(0);
       });
   }
 
@@ -29,9 +29,9 @@ const Cart = (props) => {
       }
     })
   }
-  
+  console.log("#######", cartData, totalAmount)
   return <div className='bg-image'>
-      {cartData.length > 0 ? <Container>
+      {Object.values(cartData).length > 0 ? <Container>
       <Row>
         <Col>
         <Table striped bordered hover>
@@ -44,7 +44,7 @@ const Cart = (props) => {
             </tr>
           </thead>
           {
-          cartData.map(data => 
+          Object.values(cartData).map(data => 
           <tbody>
             <tr>
               <td><img src={data.image} alt="test" width="120px"></img></td>

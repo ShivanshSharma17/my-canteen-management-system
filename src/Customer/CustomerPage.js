@@ -11,9 +11,11 @@ const CustomerPage = (props) => {
     {item: 'View Food Items', url: '/view-food-items'},
     {item: 'Cart', url: '/cart'},
     {item: 'My Orders', url: '/my-orders'},
+    // {item : 'Logout' , url: '#'}
   ];
 
   const {match: {url}} = props;
+  
 
   return <div>
     <Header navItems={navItems} {...props} loggedIn={sessionStorage.getItem("loggedInCustomer")} />

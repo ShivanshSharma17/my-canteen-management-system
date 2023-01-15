@@ -11,18 +11,18 @@ const CustomerLogin = (props) => {
   const login = async() => {
     const { customerId } = state;
     let userExists;
-    await fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/customerData/${customerId}.json`)
+    await fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/customerData/${customerId}.json`)
       .then(res => res.json())
       .then(data => {
         userExists = data === null ? false : true;
     });
     if(userExists){
-      props.history.push('/customer');
       sessionStorage.setItem("loggedInCustomer", customerId);
       setState({
         customerId: '',
         password: '',
       });
+      props.history.push('/customer');
     }else {
       setMessage('This customerID does not exist!! Please signup first!!')
     }

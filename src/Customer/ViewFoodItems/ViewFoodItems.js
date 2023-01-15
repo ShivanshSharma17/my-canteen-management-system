@@ -1,19 +1,25 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Card, Button, Row, Col, Spinner } from 'react-bootstrap';
+import { Card, Button, Row, Col, Spinner, Modal } from 'react-bootstrap';
 
 const ViewFoodItems = (props) => {
   const [data, setData] = useState('');
   const [loading, setLoader] = useState(true);
   const [cartItems, setCartItems] = useState([]);
+  const [showModal,setModal] = useState(false);
 
   const fetchItems = () => {
-    fetch('https://my-canteen-management-default-rtdb.firebaseio.com/menuItems.json')
+    try{
+      fetch('https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/menuItems.json')
       .then(res => res.json())
       .then(data => {
         const newData = Object.values(data).map(d => Object.assign(d, { quantity: 1 }));
         setData(newData);
         setLoader(false);
       });
+    }
+    catch(err){
+      console.log(err)
+    }
   }
 
   useEffect(() => {
@@ -21,16 +27,26 @@ const ViewFoodItems = (props) => {
   }, []);
 
   const addToCart = (item) => {
-    const cartData = [...cartItems, { ...item }];
+    const cartData = {...cartItems, [item.id]: { ...item }};
+    
     const customerId = sessionStorage.getItem("loggedInCustomer");
-    setCartItems([...cartData])
+    console.log(customerId);
+    setCartItems({...cartData})
     console.log("cartData", cartData)
-    fetch(`https://my-canteen-management-default-rtdb.firebaseio.com/cartItems/${customerId}.json`, {
+    if(customerId!==null){
+    fetch(`https://my-canteen-management-dfa9b-default-rtdb.firebaseio.com/cartItems/${customerId}.json`, {
       method: 'PATCH',
       body: JSON.stringify({ ...cartData })
     }).then(res => Promise.all([res, res.json()]))
     .then(() => console.log("Items added to Cart successfully!!!!!"));
     // localStorage.setItem("cartData", JSON.stringify(cartData))
+  }else{
+      setModal(true);
+  }
+  }
+
+  const handleClose = () => {
+    setModal(false);
   }
 
   const incrementQty = (val, indx) => {
@@ -64,6 +80,17 @@ const ViewFoodItems = (props) => {
           Loading...
         </Button>
         </h2>}
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Can't add to the cart</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>PLEASE LOGIN FIRST !!!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {!loading && <Row xs={6} md={4} className="g-4">
         {data !== '' && Object.values(data).map((d, idx) => (
           <Col>
